@@ -1,13 +1,19 @@
 import express from 'express'
 import { Octokit } from "@octokit/rest";
+import bodyParser from 'body-parser';
 const app = express();
+
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json())
 
 const octokit = new Octokit({
   auth: 'Github Token'
 })
 
 app.get("/", async function(req, res) {
-  const {data} = await octokit.request('GET /repos/Luosunce/material-design-data/stargazers', {
+  const {repo, owner} = req.body;
+  
+  const {data} = await octokit.request(`GET /repos/${owner}/${repo}/stargazers`, {
     owner: 'OWNER',
     repo: 'REPO'
   })
